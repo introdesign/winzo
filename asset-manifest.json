@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/winzo/static/css/main.bb58f632.css",
+    "main.js": "/winzo/static/js/main.0c855b92.js",
+    "static/js/453.8fdde886.chunk.js": "/winzo/static/js/453.8fdde886.chunk.js",
+    "static/media/winzoprint logo.jpg": "/winzo/static/media/winzoprint logo.04597346d306bfc3b4b6.jpg",
+    "index.html": "/winzo/index.html",
+    "main.bb58f632.css.map": "/winzo/static/css/main.bb58f632.css.map",
+    "main.0c855b92.js.map": "/winzo/static/js/main.0c855b92.js.map",
+    "453.8fdde886.chunk.js.map": "/winzo/static/js/453.8fdde886.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bb58f632.css",
+    "static/js/main.0c855b92.js"
+  ]
+}
