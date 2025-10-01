@@ -158,7 +158,7 @@ const App = () => {
 
   if (showLanding) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-yellow-400">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-blue-400">
         <img
           src={logo}
           alt="Winzo Logo"
