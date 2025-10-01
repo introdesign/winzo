@@ -4,7 +4,7 @@ const Header = ({ isAdmin }) => {
   const [hovered, setHovered] = React.useState(false);
 
   return (
-    <nav className="flex gap-4 items-center px-6 py-4 bg-green-400 text-gray-900 rounded-b-xl shadow">
+    <nav className="flex gap-4 items-center px-6 py-4 bg-blue-400 text-gray-900 rounded-b-xl shadow">
       <span
         className={`font-bold transition-all duration-200 cursor-pointer text-gray-900 ${hovered ? "text-3xl" : "text-2xl"}`}
         onMouseEnter={() => setHovered(true)}
