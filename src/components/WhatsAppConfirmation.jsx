@@ -9,19 +9,28 @@ const WhatsAppConfirmation = ({ cart, onBack }) => {
 
   const message = `Hello, I would like to confirm my order:%0A${orderDetails}%0A%0ATotal: RM ${total}`;
 
-  const whatsappUrl = `https://wa.me/60139990242?text=${message}`;
+  const whatsappUrl1 = `https://wa.me/60139990242?text=${message}`;
+  const whatsappUrl2 = `https://wa.me/60102579913?text=${message}`; // Replace with your second number
 
   return (
     <div className="max-w-lg mx-auto my-8 p-8 bg-white rounded-xl shadow-lg text-center">
       <h2 className="text-xl font-bold mb-4">Order Confirmed</h2>
       <div className="mb-4">Thank you for your order!</div>
       <a
-        href={whatsappUrl}
+        href={whatsappUrl1}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block w-full py-3 bg-green-600 text-white rounded font-semibold hover:bg-green-700 transition mb-2"
+      >
+        Send Order to Lim
+      </a>
+      <a
+        href={whatsappUrl2}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-block w-full py-3 bg-green-600 text-white rounded font-semibold hover:bg-green-700 transition mb-4"
       >
-        Send Order to WhatsApp
+        Send Order to Choong
       </a>
       <button
         className="w-full py-3 bg-gray-900 text-white rounded font-semibold hover:bg-gray-800 transition"
