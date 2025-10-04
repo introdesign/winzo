@@ -8,7 +8,8 @@ const App = () => {
   const [hover, setHover] = useState(false);
   const [user, setUser] = useState(null);
 
-  if (showLanding) {
+  // Show landing page only if no user is logged in
+  if (showLanding && !user) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-blue-400">
         <img
@@ -30,11 +31,17 @@ const App = () => {
     );
   }
 
-  if(!user) {
-    return(<FirebaseAuth onLogin={firebaseUser => setUser(firebaseUser)}/>)
-  
+  // Show FirebaseAuth if not logged in (after landing)
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <FirebaseAuth onLogin={(firebaseUser) => setUser(firebaseUser)} />
+      </div>
+    );
   }
 
-  return( <Homepage user={user} /> )
-}
+  // Show Homepage after login (no way to go back to landing)
+  return <Homepage user={user} />;
+};
+
 export default App;

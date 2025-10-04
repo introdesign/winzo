@@ -4,6 +4,7 @@ import ProductSidebar from "./productSidebar.jsx";
 import OrderSummary from "./OrderSummary.jsx";
 import PrintingServiceOptions from "./PrintingServiceOptions.jsx";
 import WhatsAppConfirmation from "./WhatsAppConfirmation.jsx";
+import OrderHistory from "./OrderHistory.jsx";
 
 const services = [
   { name: "Banner Printing", price: 3, unit: "per ft" },
@@ -17,10 +18,14 @@ const Homepage = ({ user }) => {
   const [showCart, setShowCart] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [showWhatsApp, setShowWhatsApp] = useState(false);
+  const [showOrderHistory, setShowOrderHistory] = useState(false);
 
   const [selectedService, setSelectedService] = useState(services[0]);
   const [length, setLength] = useState("");
   const [width, setWidth] = useState("");
+
+  // Add refresh trigger state
+  const [orderHistoryRefresh, setOrderHistoryRefresh] = useState(0);
 
   const isBanner = selectedService.name === "Banner Printing";
   const isSticker = selectedService.name === "Sticker Printing";
@@ -94,9 +99,33 @@ const Homepage = ({ user }) => {
     setShowPayment(true);
   };
 
+  // Add this function to save orders
+  const saveOrderToHistory = (orderData) => {
+    const existingOrders = JSON.parse(localStorage.getItem('userOrders') || '[]');
+    const newOrder = {
+      id: 'ORD' + Date.now(),
+      date: new Date().toISOString().split('T')[0],
+      status: 'Processing',
+      total: orderData.total,
+      items: orderData.items,
+      paymentMethod: 'WhatsApp Transfer',
+      paymentStatus: 'Pending',
+      userId: user.uid,
+      timestamp: new Date().toISOString()
+    };
+    existingOrders.push(newOrder);
+    localStorage.setItem('userOrders', JSON.stringify(existingOrders));
+  };
+
   return (
     <div className="min-h-screen bg-white">
-      <Header isAdmin={user?.email === "admin@example.com"} />
+      <Header 
+        isAdmin={user?.email === "admin@example.com"} 
+        onOrderHistoryClick={() => {
+          console.log("Order History clicked!"); // Add this for debugging
+          setShowOrderHistory(true);
+        }}
+      />
       <OrderSummary
         cart={cart}
         onCartClick={() => setShowCart(true)}
@@ -118,7 +147,7 @@ const Homepage = ({ user }) => {
               </div>
             )}
           </div>
-          {!showCart && !showPayment && (
+          {!showCart && !showPayment && !showOrderHistory && (
             <PrintingServiceOptions
               services={services}
               selectedService={selectedService}
@@ -189,15 +218,44 @@ const Homepage = ({ user }) => {
             <WhatsAppConfirmation
               cart={cart}
               onBack={() => {
+                // Save order to history
+                const orderTotal = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
+                saveOrderToHistory({
+                  total: orderTotal,
+                  items: [...cart]
+                });
+                
+                // Clear states
                 setCart([]);
                 setShowWhatsApp(false);
                 setShowPayment(false);
                 setShowCart(false);
+                
+                // Trigger order history refresh
+                setOrderHistoryRefresh(prev => prev + 1);
               }}
             />
           )}
         </div>
       </div>
+
+      {/* Order History Modal */}
+      {showOrderHistory && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto m-4">
+            <div className="p-4 border-b flex justify-between items-center">
+              <h2 className="text-xl font-bold">Order History</h2>
+              <button 
+                onClick={() => setShowOrderHistory(false)}
+                className="text-gray-500 hover:text-gray-700 text-xl px-2"
+              >
+                ✕
+              </button>
+            </div>
+            <OrderHistory user={user} refreshTrigger={orderHistoryRefresh} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

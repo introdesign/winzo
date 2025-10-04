@@ -1,6 +1,7 @@
 import React from "react";
 
-const Header = ({ isAdmin }) => {
+
+const Header = ({ isAdmin, onOrderHistoryClick }) => {
   const [hovered, setHovered] = React.useState(false);
 
   return (
@@ -15,6 +16,12 @@ const Header = ({ isAdmin }) => {
       <a href="#" className="text-gray-900 hover:underline font-medium">Home</a>
       <a href="#" className="text-gray-900 hover:underline font-medium">About</a>
       <a href="#" className="text-gray-900 hover:underline font-medium">Contact</a>
+      <button 
+        onClick={onOrderHistoryClick}
+        className="text-gray-900 hover:underline font-medium bg-transparent border-none cursor-pointer"
+      >
+        Order History
+      </button>
       {isAdmin && (
         <a href="#" className="text-gray-900 hover:underline font-medium">Product</a>
       )}
@@ -23,3 +30,4 @@ const Header = ({ isAdmin }) => {
 };
 
 export default Header;
+
