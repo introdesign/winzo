@@ -5,6 +5,8 @@ import OrderSummary from "./OrderSummary.jsx";
 import PrintingServiceOptions from "./PrintingServiceOptions.jsx";
 import WhatsAppConfirmation from "./WhatsAppConfirmation.jsx";
 import OrderHistory from "./OrderHistory.jsx";
+import AdminDashboard from "./AdminDashboard.jsx";
+import RevenueDashboard from "./RevenueDashboard.jsx";
 
 const services = [
   { name: "Banner Printing", price: 3, unit: "per ft" },
@@ -19,6 +21,8 @@ const Homepage = ({ user }) => {
   const [showPayment, setShowPayment] = useState(false);
   const [showWhatsApp, setShowWhatsApp] = useState(false);
   const [showOrderHistory, setShowOrderHistory] = useState(false);
+  const [showAdminDashboard, setShowAdminDashboard] = useState(false);
+  const [showRevenueDashboard, setShowRevenueDashboard] = useState(false);
 
   const [selectedService, setSelectedService] = useState(services[0]);
   const [length, setLength] = useState("");
@@ -117,19 +121,30 @@ const Homepage = ({ user }) => {
     localStorage.setItem('userOrders', JSON.stringify(existingOrders));
   };
 
+  // Add this function to count pending orders
+  const getPendingOrdersCount = () => {
+    try {
+      const allOrders = JSON.parse(localStorage.getItem('userOrders') || '[]');
+      const userOrders = allOrders.filter(order => order.userId === user.uid);
+      return userOrders.filter(order => order.paymentStatus === 'Pending').length;
+    } catch {
+      return 0;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Header 
-        isAdmin={user?.email === "admin@example.com"} 
-        onOrderHistoryClick={() => {
-          console.log("Order History clicked!"); // Add this for debugging
-          setShowOrderHistory(true);
-        }}
+        isAdmin={user?.email === "introdesign102@gmail.com"} // Change to your actual email
+        onOrderHistoryClick={() => setShowOrderHistory(true)}
+        onAdminDashboardClick={() => setShowAdminDashboard(true)}
+        onRevenueDashboardClick={() => setShowRevenueDashboard(true)}
+        pendingOrdersCount={getPendingOrdersCount()}
       />
       <OrderSummary
         cart={cart}
         onCartClick={() => setShowCart(true)}
-        className="fixed top-6 right-6 z-50 bg-white rounded-xl shadow-lg px-6 py-4 min-w-[80px] flex items-center cursor-pointer"
+        
       />
       <div className="flex flex-col md:flex-row pt-2 md:pt-8 max-w-7xl mx-auto">
         <div className="w-full md:w-72 md:mr-6 mb-4 md:mb-0">
@@ -253,6 +268,42 @@ const Homepage = ({ user }) => {
               </button>
             </div>
             <OrderHistory user={user} refreshTrigger={orderHistoryRefresh} />
+          </div>
+        </div>
+      )}
+
+      {/* Admin Dashboard Modal */}
+      {showAdminDashboard && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-auto m-4">
+            <div className="p-4 border-b flex justify-between items-center">
+              <h2 className="text-xl font-bold">Admin Dashboard</h2>
+              <button 
+                onClick={() => setShowAdminDashboard(false)}
+                className="text-gray-500 hover:text-gray-700 text-xl px-2"
+              >
+                ✕
+              </button>
+            </div>
+            <AdminDashboard user={user} />
+          </div>
+        </div>
+      )}
+
+      {/* Revenue Dashboard Modal */}
+      {showRevenueDashboard && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-7xl w-full max-h-[90vh] overflow-auto m-4">
+            <div className="p-4 border-b flex justify-between items-center">
+              <h2 className="text-xl font-bold">Revenue Dashboard</h2>
+              <button 
+                onClick={() => setShowRevenueDashboard(false)}
+                className="text-gray-500 hover:text-gray-700 text-xl px-2"
+              >
+                ✕
+              </button>
+            </div>
+            <RevenueDashboard user={user} />
           </div>
         </div>
       )}
